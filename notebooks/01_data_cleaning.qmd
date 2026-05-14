@@ -1,0 +1,66 @@
+---
+title: "Data Cleaning"
+format: html
+editor: visual
+echo: false
+---
+
+## Load Packages
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+## Read in Raw Data
+
+```{r}
+raw <- read.csv("C:/Users/btuwa/OneDrive/Documents/GitHub/lapd-crime-analysis/data/raw/Crime_Data_from_2020_to_2024.csv")
+```
+
+## Review data
+
+```{r}
+glimpse(raw)
+summary(raw)
+```
+
+```{r}
+clean <- raw %>%
+  mutate(
+    DATE.OCC = mdy_hms(DATE.OCC),
+    Date.Rptd = as.Date(lubridate::mdy_hms(Date.Rptd))
+    ) %>%
+  distinct()
+```
+
+```{r}
+clean <- raw %>%
+  mutate(
+    Date.Rptd = format(as.Date(lubridate::mdy_hms(Date.Rptd)), "%m/%d/%Y"),
+    DATE.OCC  = format(as.Date(lubridate::mdy_hms(DATE.OCC)), "%m/%d/%Y")
+  )
+```
+
+```{r}
+clean <- clean %>%
+  mutate(
+    TIME.OCC = stringr::str_pad(TIME.OCC, width = 4, pad = "0"),
+     time_occ = lubridate::parse_date_time(TIME.OCC, orders = "HM")
+    )
+  
+```
+
+```{r}
+clean <- clean %>%
+  mutate(
+    time_occ_str = stringr::str_pad(as.character(TIME.OCC), 4, pad = "0"),
+    time_occ = lubridate::parse_date_time(time_occ_str, orders = "HM"),
+    time_occ = format(time_occ, "%H:%M")
+  )
+```
+
+```{r}
+clean <- clean %>%
+  select(-time_occ_str)
+```
