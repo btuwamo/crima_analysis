@@ -42,6 +42,13 @@ clean <- clean %>%
     ) 
 ```
 
+```{r}
+clean <- clean %>%
+  mutate(
+    YEAR = lubridate::year(DATE.OCC)
+  )
+```
+
 
 ```{r}
 #cleaning AREA.NAME to standardize
@@ -52,7 +59,7 @@ clean %>%
 ```
 
 ```{r}
-crime_cat <- clean %>%
+clean <- clean %>%
   mutate(
     Crm.Cd.Desc = case_when(
       Crm.Cd.Desc %in% c("BATTERY - SIMPLE ASSAULT",
@@ -73,16 +80,19 @@ crime_cat <- clean %>%
 ```
 
 ```{r}
-clean <- crime_cat %>%
+clean <- clean %>%
   distinct(DR_NO, .keep_all = TRUE)
 ```
 
 ```{r}
 clean <- clean %>%
-  select(AREA, AREA.NAME, Crm.Cd.Desc, DATE.OCC)
+  select(AREA, AREA.NAME, Crm.Cd.Desc, DATE.OCC, YEAR)
 ```
 
-
+# Creating Clean CSV 
+```{r}
+write.csv(clean, file ="~/GitHub/lapd-crime-analysis/crima_analysis/data/cleaned/lapd_cleaned.csv", row.names = FALSE)
+```
 
 
 

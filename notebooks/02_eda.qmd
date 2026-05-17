@@ -5,8 +5,41 @@ editor: visual
 echo: false
 ---
 
-## Loading in CSV
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+
+## Load clean data
 
 ```{r}
-
+data <- read.csv("~/GitHub/lapd-crime-analysis/crima_analysis/data/cleaned/lapd_cleaned.csv")
 ```
+
+## Crime county by area
+```{r}
+glimpse(data)
+```
+
+```{r}
+#Checking for missing
+sum(is.na(data))
+```
+
+```{r}
+#Crime distribution
+data %>%
+  count(Crm.Cd.Desc) %>%
+  ggplot(aes(x = Crm.Cd.Desc, y = n, fill = Crm.Cd.Desc)) +
+  geom_col()
+```
+
+```{r}
+data %>%
+  count(AREA.NAME, name = "total.crimes")
+```
+
+
+
+
